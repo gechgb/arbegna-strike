@@ -1,0 +1,6 @@
+{
+  "name": "Arbegna Strike",
+  "description": "Ethiopian 2D LAN multiplayer and single player action shooter inspired by Mini Militia with historical and modern weapons, jetpack combat, and custom warriors.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

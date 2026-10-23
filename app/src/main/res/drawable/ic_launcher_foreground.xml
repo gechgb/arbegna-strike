@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Crossed Spear 1 -->
+    <path
+        android:pathData="M28,80 L80,28"
+        android:strokeColor="#D97706"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M78,26 L86,22 L82,30 Z"
+        android:fillColor="#FBBF24" />
+    <!-- Crossed Spear 2 / Arrow -->
+    <path
+        android:pathData="M80,80 L28,28"
+        android:strokeColor="#D97706"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M30,26 L22,22 L26,30 Z"
+        android:fillColor="#FBBF24" />
+    <!-- Traditional Ethiopian Curved Gashaa (Shield) -->
+    <path
+        android:pathData="M54,26 C68,26 76,40 76,56 C76,72 65,82 54,86 C43,82 32,72 32,56 C32,40 40,26 54,26 Z"
+        android:fillColor="#B45309"
+        android:strokeColor="#FDE68A"
+        android:strokeWidth="2.5" />
+    <!-- Shield Boss / Star of David / Pentagram traditional Ethiopian emboss -->
+    <path
+        android:pathData="M54,38 L57.5,49 L69,49 L60,56 L63.5,67 L54,60 L44.5,67 L48,56 L39,49 L50.5,49 Z"
+        android:fillColor="#F59E0B" />
+    <!-- Lion Mane Crest / Arbegna warrior crown -->
+    <path
+        android:pathData="M42,26 C44,18 48,16 54,16 C60,16 64,18 66,26 Z"
+        android:fillColor="#EAB308" />
+</vector>

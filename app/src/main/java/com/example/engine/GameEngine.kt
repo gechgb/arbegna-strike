@@ -150,7 +150,8 @@ class GameEngine(
                 secondaryWeapon = if (initialWep == WeaponType.SPARROW_BOW) WeaponType.WAR_SPEAR else initialWep,
                 ammoInMag = initialWep.magazineSize,
                 reserveAmmo = initialWep.magazineSize * 4,
-                isBot = false
+                isBot = false,
+                customization = WarriorCustomizationRepository.currentCustomization.copy()
             )
             players.add(localPlayer)
 
@@ -209,7 +210,10 @@ class GameEngine(
                             secondaryWeapon = WeaponType.WAR_SPEAR,
                             ammoInMag = bHero.initialWeapon.magazineSize,
                             reserveAmmo = 999,
-                            isBot = true
+                            isBot = true,
+                            customization = WarriorCustomizationRepository.presets[i % WarriorCustomizationRepository.presets.size].let { p ->
+                                WarriorCustomization(cape = p.cape, kumeta = p.kumeta, headgear = p.headgear, sash = p.sash)
+                            }
                         )
                         players.add(bot)
                     }

@@ -319,7 +319,8 @@ fun SafeProgressBar(
     color: Color,
     trackColor: Color,
     height: androidx.compose.ui.unit.Dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    brush: Brush? = null
 ) {
     val safeRatio = if (ratio.isNaN() || ratio.isInfinite()) 0f else ratio.coerceIn(0f, 1f)
     Box(
@@ -335,7 +336,10 @@ fun SafeProgressBar(
                     .fillMaxHeight()
                     .fillMaxWidth(fraction = safeRatio)
                     .clip(RoundedCornerShape(height / 2f))
-                    .background(color)
+                    .then(
+                        if (brush != null) Modifier.background(brush)
+                        else Modifier.background(color)
+                    )
             )
         }
     }
@@ -353,10 +357,20 @@ fun TopHudBar(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color(0xD90B0F19))
-            .border(1.dp, Color(0x33F59E0B), RoundedCornerShape(16.dp))
-            .padding(horizontal = 12.dp, vertical = 6.dp)
+            .clip(RoundedCornerShape(18.dp))
+            .background(Color(0xEB0A0F1D))
+            .border(
+                1.5.dp,
+                Brush.horizontalGradient(
+                    listOf(
+                        Color(0xFFF59E0B).copy(alpha = 0.7f),
+                        Color(0xFF10B981).copy(alpha = 0.5f),
+                        Color(0xFFEF4444).copy(alpha = 0.6f)
+                    )
+                ),
+                RoundedCornerShape(18.dp)
+            )
+            .padding(horizontal = 14.dp, vertical = 7.dp)
     ) {
         val isPortrait = maxWidth < 600.dp
 
@@ -379,9 +393,13 @@ fun TopHudBar(
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(36.dp)
+                                .size(38.dp)
                                 .clip(CircleShape)
-                                .background(player.hero.primaryColor)
+                                .background(
+                                    Brush.radialGradient(
+                                        listOf(player.hero.primaryColor, Color(0xFF0F172A))
+                                    )
+                                )
                                 .border(1.5.dp, Color(0xFFFDE68A), CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
@@ -389,11 +407,11 @@ fun TopHudBar(
                                 text = player.hero.amharicName.take(1),
                                 color = Color.White,
                                 fontWeight = FontWeight.Black,
-                                fontSize = 15.sp
+                                fontSize = 16.sp
                             )
                         }
 
-                        Column(modifier = Modifier.width(115.dp)) {
+                        Column(modifier = Modifier.width(120.dp)) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
@@ -408,25 +426,36 @@ fun TopHudBar(
                                     text = "${player.kills}K/${player.deaths}D",
                                     color = Color(0xFFF59E0B),
                                     fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Black
                                 )
                             }
                             Spacer(modifier = Modifier.height(2.dp))
                             val hpRatio = if (player.maxHealth > 0) player.health.toFloat() / player.maxHealth else 0f
+                            val hpBrush = if (hpRatio > 0.4f) {
+                                Brush.horizontalGradient(listOf(Color(0xFF10B981), Color(0xFF34D399)))
+                            } else {
+                                Brush.horizontalGradient(listOf(Color(0xFFDC2626), Color(0xFFEF4444)))
+                            }
                             SafeProgressBar(
                                 ratio = hpRatio,
                                 color = if (hpRatio > 0.4f) Color(0xFF10B981) else Color(0xFFEF4444),
-                                trackColor = Color(0xFF334155),
-                                height = 5.dp
+                                trackColor = Color(0xFF1E293B),
+                                height = 5.dp,
+                                brush = hpBrush
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             val fuelRatio = if (player.maxJetpackFuel > 0f) player.jetpackFuel / player.maxJetpackFuel else 0f
-                            val fuelColor = if (player.superJetpackTimerMs > 0L) Color(0xFF38BDF8) else if (fuelRatio < 0.2f) Color(0xFFEF4444) else Color(0xFFFF6D00)
+                            val fuelBrush = if (player.superJetpackTimerMs > 0L) {
+                                Brush.horizontalGradient(listOf(Color(0xFF0284C7), Color(0xFF38BDF8)))
+                            } else {
+                                Brush.horizontalGradient(listOf(Color(0xFFEA580C), Color(0xFFF59E0B)))
+                            }
                             SafeProgressBar(
                                 ratio = fuelRatio,
-                                color = fuelColor,
-                                trackColor = Color(0xFF1E293B),
-                                height = 4.dp
+                                color = if (fuelRatio < 0.2f) Color(0xFFEF4444) else Color(0xFFFF6D00),
+                                trackColor = Color(0xFF0F172A),
+                                height = 4.dp,
+                                brush = fuelBrush
                             )
                         }
                     }
@@ -437,12 +466,12 @@ fun TopHudBar(
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         Card(
-                            colors = CardDefaults.cardColors(containerColor = Color(0xFF1F2937)),
-                            shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier.border(1.dp, player.currentWeapon.color, RoundedCornerShape(8.dp))
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFF131D2E)),
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier.border(1.dp, player.currentWeapon.color, RoundedCornerShape(10.dp))
                         ) {
                             Column(
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp),
                                 horizontalAlignment = Alignment.End
                             ) {
                                 Text(
@@ -617,28 +646,41 @@ fun TopHudBar(
                         }
                         Spacer(modifier = Modifier.height(3.dp))
                         val hpRatio = if (player.maxHealth > 0) player.health.toFloat() / player.maxHealth else 0f
+                        val hpBrush = if (hpRatio > 0.4f) {
+                            Brush.horizontalGradient(listOf(Color(0xFF10B981), Color(0xFF34D399)))
+                        } else {
+                            Brush.horizontalGradient(listOf(Color(0xFFDC2626), Color(0xFFEF4444)))
+                        }
                         SafeProgressBar(
                             ratio = hpRatio,
                             color = if (hpRatio > 0.4f) Color(0xFF10B981) else Color(0xFFEF4444),
-                            trackColor = Color(0xFF334155),
-                            height = 6.dp
+                            trackColor = Color(0xFF1E293B),
+                            height = 6.dp,
+                            brush = hpBrush
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         val armRatio = if (player.maxArmor > 0) player.armor.toFloat() / player.maxArmor else 0f
+                        val armBrush = Brush.horizontalGradient(listOf(Color(0xFF0284C7), Color(0xFF38BDF8)))
                         SafeProgressBar(
                             ratio = armRatio,
                             color = Color(0xFF38BDF8),
-                            trackColor = Color(0xFF1E293B),
-                            height = 4.dp
+                            trackColor = Color(0xFF0F172A),
+                            height = 4.dp,
+                            brush = armBrush
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         val fuelRatio = if (player.maxJetpackFuel > 0f) player.jetpackFuel / player.maxJetpackFuel else 0f
-                        val fuelColor = if (player.superJetpackTimerMs > 0L) Color(0xFF38BDF8) else if (fuelRatio < 0.2f) Color(0xFFEF4444) else Color(0xFFFF6D00)
+                        val fuelBrush = if (player.superJetpackTimerMs > 0L) {
+                            Brush.horizontalGradient(listOf(Color(0xFF0284C7), Color(0xFF38BDF8)))
+                        } else {
+                            Brush.horizontalGradient(listOf(Color(0xFFEA580C), Color(0xFFF59E0B)))
+                        }
                         SafeProgressBar(
                             ratio = fuelRatio,
-                            color = fuelColor,
-                            trackColor = Color(0xFF1E293B),
-                            height = 4.dp
+                            color = if (fuelRatio < 0.2f) Color(0xFFEF4444) else Color(0xFFFF6D00),
+                            trackColor = Color(0xFF0F172A),
+                            height = 4.dp,
+                            brush = fuelBrush
                         )
                     }
 
@@ -858,15 +900,19 @@ fun VirtualJoystick(
     ) {
         Box(
             modifier = Modifier
-                .size(118.dp)
+                .size(122.dp)
                 .clip(CircleShape)
-                .background(Color(0xD90B0F19))
-                .border(2.dp, accentColor.copy(alpha = 0.65f), CircleShape)
+                .background(
+                    Brush.radialGradient(
+                        listOf(Color(0xEE111827), Color(0xF2070A12))
+                    )
+                )
+                .border(2.dp, Brush.sweepGradient(listOf(accentColor, accentColor.copy(alpha = 0.35f), accentColor)), CircleShape)
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         val down = awaitFirstDown(requireUnconsumed = false)
                         val center = Offset(size.width / 2f, size.height / 2f)
-                        val maxR = (size.width / 2f) - 12f
+                        val maxR = (size.width / 2f) - 14f
                         val diff = down.position - center
                         val dist = hypot(diff.x, diff.y)
                         val clampedDist = min(dist, maxR)
@@ -902,33 +948,47 @@ fun VirtualJoystick(
                 },
             contentAlignment = Alignment.Center
         ) {
-            // Base crosshairs
-            Icon(
-                imageVector = Icons.Default.Navigation,
-                contentDescription = null,
-                tint = accentColor.copy(alpha = 0.35f),
-                modifier = Modifier.size(28.dp)
-            )
+            // Tactical guide ring & crosshair ticks
+            Canvas(modifier = Modifier.fillMaxSize().padding(14.dp)) {
+                val r = size.minDimension / 2f
+                val c = Offset(size.width / 2f, size.height / 2f)
+                drawCircle(
+                    color = accentColor.copy(alpha = 0.22f),
+                    radius = r * 0.55f,
+                    center = c,
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5f)
+                )
+                drawCircle(
+                    color = accentColor.copy(alpha = 0.35f),
+                    radius = r,
+                    center = c,
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5f)
+                )
+            }
 
-            // Draggable Knob
+            // Draggable Knob with tactile radial gradient
             Box(
                 modifier = Modifier
                     .offset { IntOffset(knobOffset.x.roundToInt(), knobOffset.y.roundToInt()) }
-                    .size(48.dp)
+                    .size(50.dp)
                     .clip(CircleShape)
                     .background(
                         Brush.radialGradient(
-                            listOf(accentColor, accentColor.copy(alpha = 0.75f))
+                            listOf(
+                                accentColor,
+                                accentColor.copy(alpha = 0.85f),
+                                Color(0xFF0F172A)
+                            )
                         )
                     )
-                    .border(2.dp, Color.White, CircleShape),
+                    .border(2.5.dp, Color(0xFFFDE68A), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.DirectionsRun,
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.size(22.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
@@ -936,7 +996,7 @@ fun VirtualJoystick(
         Text(
             text = label,
             color = Color(0xFFFDE68A),
-            fontSize = 10.sp,
+            fontSize = 11.sp,
             fontWeight = FontWeight.Bold
         )
     }
@@ -956,15 +1016,19 @@ fun RightAimJoystick(
     ) {
         Box(
             modifier = Modifier
-                .size(118.dp)
+                .size(122.dp)
                 .clip(CircleShape)
-                .background(Color(0xD90B0F19))
-                .border(2.dp, Color(0xFFEF4444).copy(alpha = 0.7f), CircleShape)
+                .background(
+                    Brush.radialGradient(
+                        listOf(Color(0xEE1E1218), Color(0xF20F080D))
+                    )
+                )
+                .border(2.dp, Brush.sweepGradient(listOf(Color(0xFFEF4444), Color(0xFF7F1D1D), Color(0xFFEF4444))), CircleShape)
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         val down = awaitFirstDown(requireUnconsumed = false)
                         val center = Offset(size.width / 2f, size.height / 2f)
-                        val maxR = (size.width / 2f) - 12f
+                        val maxR = (size.width / 2f) - 14f
                         val diff = down.position - center
                         val dist = hypot(diff.x, diff.y)
                         val clampedDist = min(dist, maxR)
@@ -1012,33 +1076,48 @@ fun RightAimJoystick(
                 },
             contentAlignment = Alignment.Center
         ) {
-            // Target Crosshair
-            Icon(
-                imageVector = Icons.Default.GpsFixed,
-                contentDescription = null,
-                tint = Color(0xFFEF4444).copy(alpha = 0.45f),
-                modifier = Modifier.size(28.dp)
-            )
+            // Crosshairs & targeting reticle rings
+            Canvas(modifier = Modifier.fillMaxSize().padding(14.dp)) {
+                val r = size.minDimension / 2f
+                val c = Offset(size.width / 2f, size.height / 2f)
+                drawCircle(
+                    color = Color(0xFFEF4444).copy(alpha = 0.25f),
+                    radius = r * 0.55f,
+                    center = c,
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5f)
+                )
+                drawCircle(
+                    color = Color(0xFFEF4444).copy(alpha = 0.4f),
+                    radius = r,
+                    center = c,
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5f)
+                )
+                // 4 axis tick marks
+                drawLine(Color(0xFFEF4444).copy(alpha = 0.5f), Offset(c.x, c.y - r), Offset(c.x, c.y - r + 8f), strokeWidth = 2f)
+                drawLine(Color(0xFFEF4444).copy(alpha = 0.5f), Offset(c.x, c.y + r), Offset(c.x, c.y + r - 8f), strokeWidth = 2f)
+                drawLine(Color(0xFFEF4444).copy(alpha = 0.5f), Offset(c.x - r, c.y), Offset(c.x - r + 8f, c.y), strokeWidth = 2f)
+                drawLine(Color(0xFFEF4444).copy(alpha = 0.5f), Offset(c.x + r, c.y), Offset(c.x + r - 8f, c.y), strokeWidth = 2f)
+            }
 
             // Draggable Aim Reticle Knob
             Box(
                 modifier = Modifier
                     .offset { IntOffset(knobOffset.x.roundToInt(), knobOffset.y.roundToInt()) }
-                    .size(48.dp)
+                    .size(50.dp)
                     .clip(CircleShape)
                     .background(
                         Brush.radialGradient(
-                            listOf(Color(0xFFEF4444), Color(0xFF991B1B))
+                            listOf(Color(0xFFEF4444), Color(0xFFDC2626), Color(0xFF7F1D1D))
                         )
                     )
-                    .border(2.dp, Color(0xFFFDE68A), CircleShape),
+                    .border(2.5.dp, Color(0xFFFDE68A), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Adjust,
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.size(22.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
@@ -1046,7 +1125,7 @@ fun RightAimJoystick(
         Text(
             text = "Aim 360°",
             color = Color(0xFFEF4444),
-            fontSize = 10.sp,
+            fontSize = 11.sp,
             fontWeight = FontWeight.Bold
         )
     }
@@ -1205,12 +1284,17 @@ fun ActionButton(
     Box(
         modifier = Modifier
             .size(width = 72.dp, height = 72.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(if (enabled) color.copy(alpha = 0.25f) else Color(0xFF1E293B))
+            .clip(RoundedCornerShape(18.dp))
+            .background(
+                if (enabled) Brush.verticalGradient(
+                    listOf(color.copy(alpha = 0.32f), color.copy(alpha = 0.12f), Color(0xFF0F172A))
+                )
+                else Brush.verticalGradient(listOf(Color(0xFF1E293B), Color(0xFF0F172A)))
+            )
             .border(
                 1.5.dp,
-                if (enabled) color else Color(0xFF475569),
-                RoundedCornerShape(16.dp)
+                if (enabled) color else Color(0xFF334155),
+                RoundedCornerShape(18.dp)
             )
             .clickable(enabled = enabled, onClick = onClick)
             .testTag(testTag)
@@ -1239,7 +1323,7 @@ fun ActionButton(
                 text = badge,
                 color = if (enabled) color else Color(0xFF94A3B8),
                 fontSize = 8.sp,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.Black
             )
         }
     }

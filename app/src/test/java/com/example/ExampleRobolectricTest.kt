@@ -537,5 +537,52 @@ class ExampleRobolectricTest {
         assertFalse(engine.matchEnded)
         audio.release()
     }
+
+    @Test
+    fun `test cultural attire cosmetic customization repository and presets`() {
+        val repo = WarriorCustomizationRepository
+        // Test initial or default attire
+        repo.equipCape(CapeSkin.ROYAL_JANO)
+        repo.equipKumeta(KumetaSkin.ROYAL_NAVY_KUMETA)
+        repo.equipHeadgear(HeadgearSkin.LION_MANE_GOFERE)
+        repo.equipSash(SashSkin.ROYAL_JANO_SASH)
+
+        assertEquals(CapeSkin.ROYAL_JANO, repo.currentCustomization.cape)
+        assertEquals(KumetaSkin.ROYAL_NAVY_KUMETA, repo.currentCustomization.kumeta)
+        assertEquals(HeadgearSkin.LION_MANE_GOFERE, repo.currentCustomization.headgear)
+        assertEquals(SashSkin.ROYAL_JANO_SASH, repo.currentCustomization.sash)
+
+        // Test Preset: Arbegna Mountain Patriot
+        val patriotPreset = repo.presets.first { it.id == "arbegna_patriot" }
+        repo.equipPreset(patriotPreset)
+
+        assertEquals(CapeSkin.PATRIOT_KUTA, repo.currentCustomization.cape)
+        assertEquals(KumetaSkin.PATRIOT_KHAKI_KUMETA, repo.currentCustomization.kumeta)
+        assertEquals(HeadgearSkin.LION_MANE_GOFERE, repo.currentCustomization.headgear)
+        assertEquals(SashSkin.PATRIOT_CARTRIDGE_BELT, repo.currentCustomization.sash)
+    }
+
+    @Test
+    fun `test custom attire equips onto local player in game engine`() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val audio = GameAudio(context)
+        val engine = GameEngine(audio = audio)
+
+        // Equip Velvet Kabba and Midnight Onyx Kumeta
+        WarriorCustomizationRepository.equipCape(CapeSkin.BLACK_VELVET_CABBA)
+        WarriorCustomizationRepository.equipKumeta(KumetaSkin.MIDNIGHT_ONYX_KUMETA)
+
+        engine.initGame(
+            gameMode = GameMode.BOT_DEATHMATCH,
+            arena = MapArena.FASIL_FORTRESS,
+            playerName = "Axumite Guard",
+            hero = WarriorHero.MEHAL_SEFARI
+        )
+
+        assertEquals(CapeSkin.BLACK_VELVET_CABBA, engine.localPlayer.customization.cape)
+        assertEquals(KumetaSkin.MIDNIGHT_ONYX_KUMETA, engine.localPlayer.customization.kumeta)
+
+        audio.release()
+    }
 }
 

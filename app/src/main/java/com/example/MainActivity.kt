@@ -31,6 +31,7 @@ enum class AppScreen {
     LAN_LOBBY,
     CAMPAIGN_SELECT,
     HEROIC_CHALLENGES,
+    WARRIOR_CUSTOMIZATION,
     IN_GAME
 }
 
@@ -243,6 +244,9 @@ fun ArbegnaAppContent(
                     },
                     onChallengesClick = {
                         currentScreen = AppScreen.HEROIC_CHALLENGES
+                    },
+                    onCustomizationClick = {
+                        currentScreen = AppScreen.WARRIOR_CUSTOMIZATION
                     }
                 )
             }
@@ -255,7 +259,8 @@ fun ArbegnaAppContent(
                         selectedHero = it
                         currentScreen = AppScreen.MAIN_MENU
                     },
-                    onBackClick = { currentScreen = AppScreen.MAIN_MENU }
+                    onBackClick = { currentScreen = AppScreen.MAIN_MENU },
+                    onCustomizationClick = { currentScreen = AppScreen.WARRIOR_CUSTOMIZATION }
                 )
             }
 
@@ -342,6 +347,14 @@ fun ArbegnaAppContent(
                             android.util.Log.e("MainActivity", "Error launching challenge trial", t)
                         }
                     }
+                )
+            }
+
+            AppScreen.WARRIOR_CUSTOMIZATION -> {
+                BackHandler { currentScreen = AppScreen.MAIN_MENU }
+                WarriorCustomizationScreen(
+                    currentHero = selectedHero,
+                    onBackClick = { currentScreen = AppScreen.MAIN_MENU }
                 )
             }
 

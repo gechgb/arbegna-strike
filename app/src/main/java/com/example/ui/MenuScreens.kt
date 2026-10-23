@@ -47,6 +47,7 @@ fun MainMenuScreen(
     onPracticeRangeClick: () -> Unit,
     onCampaignClick: () -> Unit = {},
     onChallengesClick: () -> Unit = {},
+    onCustomizationClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var botCount by remember { mutableStateOf(3) }
@@ -58,7 +59,11 @@ fun MainMenuScreen(
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    listOf(Color(0xFF0F172A), Color(0xFF090D16))
+                    listOf(
+                        Color(0xFF0C1322),
+                        Color(0xFF080C16),
+                        Color(0xFF030509)
+                    )
                 )
             )
             .clickable(
@@ -73,7 +78,7 @@ fun MainMenuScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(horizontal = if (isCompactWidth) 14.dp else 20.dp, vertical = 14.dp),
+                .padding(horizontal = if (isCompactWidth) 14.dp else 22.dp, vertical = 14.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             // HEADER BAR: Title & Profile
@@ -91,17 +96,21 @@ fun MainMenuScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Box(
                                 modifier = Modifier
-                                    .size(44.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(Color(0xFFD97706))
-                                    .border(2.dp, Color(0xFFFDE68A), RoundedCornerShape(10.dp)),
+                                    .size(46.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(
+                                        Brush.linearGradient(
+                                            listOf(Color(0xFFF59E0B), Color(0xFFD97706), Color(0xFFB45309))
+                                        )
+                                    )
+                                    .border(1.5.dp, Color(0xFFFDE68A), RoundedCornerShape(12.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Shield,
                                     contentDescription = "Emblem",
                                     tint = Color.White,
-                                    modifier = Modifier.size(26.dp)
+                                    modifier = Modifier.size(28.dp)
                                 )
                             }
                             Spacer(modifier = Modifier.width(10.dp))
@@ -119,6 +128,7 @@ fun MainMenuScreen(
                                         modifier = Modifier
                                             .clip(RoundedCornerShape(4.dp))
                                             .background(Color(0xFF1E293B))
+                                            .border(0.5.dp, Color(0x33FFFFFF), RoundedCornerShape(4.dp))
                                             .padding(horizontal = 4.dp, vertical = 2.dp),
                                         horizontalArrangement = Arrangement.spacedBy(2.dp)
                                     ) {
@@ -128,34 +138,49 @@ fun MainMenuScreen(
                                     }
                                 }
                                 Text(
-                                    text = "አርበኛ ስትራይክ - 2D Action Combat",
+                                    text = "አርበኛ ስትራይክ • 2D Action Combat",
                                     color = Color(0xFF94A3B8),
                                     fontSize = 10.sp,
-                                    fontWeight = FontWeight.Medium
+                                    fontWeight = FontWeight.SemiBold
                                 )
                             }
                         }
 
-                        // Hero Avatar Quick Button
-                        Button(
-                            onClick = onHeroClick,
-                            colors = ButtonDefaults.buttonColors(containerColor = selectedHero.primaryColor),
-                            shape = RoundedCornerShape(10.dp),
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
-                            modifier = Modifier.testTag("hero_barracks_button")
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(
-                                    text = selectedHero.amharicName,
-                                    color = Color.White,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "Hero ▾",
-                                    color = Color(0xFFFDE68A),
-                                    fontSize = 9.sp
-                                )
+                        // Hero Avatar Quick Button & Attire Button
+                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            OutlinedButton(
+                                onClick = onCustomizationClick,
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFFDE68A)),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFF59E0B)),
+                                shape = RoundedCornerShape(12.dp),
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                                modifier = Modifier.testTag("compact_customization_button")
+                            ) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(text = "አልባሳት", color = Color(0xFFF59E0B), fontSize = 11.sp, fontWeight = FontWeight.Black)
+                                    Text(text = "Attire", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Medium)
+                                }
+                            }
+                            Button(
+                                onClick = onHeroClick,
+                                colors = ButtonDefaults.buttonColors(containerColor = selectedHero.primaryColor),
+                                shape = RoundedCornerShape(12.dp),
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                                modifier = Modifier.testTag("hero_barracks_button")
+                            ) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        text = selectedHero.amharicName,
+                                        color = Color.White,
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = "Hero ▾",
+                                        color = Color(0xFFFDE68A),
+                                        fontSize = 9.sp
+                                    )
+                                }
                             }
                         }
                     }
@@ -164,9 +189,10 @@ fun MainMenuScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(Color(0xFF1E293B))
-                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color(0xFF131D31))
+                            .border(1.dp, Color(0x33475569), RoundedCornerShape(12.dp))
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -194,8 +220,11 @@ fun MainMenuScreen(
                             ),
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = Color(0xFFF59E0B),
-                                unfocusedBorderColor = Color(0xFF475569)
-                            )
+                                unfocusedBorderColor = Color(0xFF334155),
+                                focusedContainerColor = Color(0xFF0B1120),
+                                unfocusedContainerColor = Color(0xFF0B1120)
+                            ),
+                            shape = RoundedCornerShape(8.dp)
                         )
                     }
                 }
@@ -209,17 +238,21 @@ fun MainMenuScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(
                             modifier = Modifier
-                                .size(48.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(Color(0xFFD97706))
-                                .border(2.dp, Color(0xFFFDE68A), RoundedCornerShape(12.dp)),
+                                .size(50.dp)
+                                .clip(RoundedCornerShape(14.dp))
+                                .background(
+                                    Brush.linearGradient(
+                                        listOf(Color(0xFFF59E0B), Color(0xFFD97706), Color(0xFFB45309))
+                                    )
+                                )
+                                .border(2.dp, Color(0xFFFDE68A), RoundedCornerShape(14.dp)),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Shield,
                                 contentDescription = "Emblem",
                                 tint = Color.White,
-                                modifier = Modifier.size(30.dp)
+                                modifier = Modifier.size(32.dp)
                             )
                         }
                         Spacer(modifier = Modifier.width(12.dp))
@@ -237,6 +270,7 @@ fun MainMenuScreen(
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(6.dp))
                                         .background(Color(0xFF1E293B))
+                                        .border(0.5.dp, Color(0x33FFFFFF), RoundedCornerShape(6.dp))
                                         .padding(horizontal = 6.dp, vertical = 2.dp),
                                     horizontalArrangement = Arrangement.spacedBy(3.dp)
                                 ) {
@@ -256,12 +290,12 @@ fun MainMenuScreen(
 
                     // Player Profile Card
                     Card(
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFF131D31)),
                         shape = RoundedCornerShape(14.dp),
-                        modifier = Modifier.border(1.dp, Color(0x33F59E0B), RoundedCornerShape(14.dp))
+                        modifier = Modifier.border(1.dp, Color(0x40F59E0B), RoundedCornerShape(14.dp))
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
@@ -269,7 +303,8 @@ fun MainMenuScreen(
                                 Text(
                                     text = "Warrior Name",
                                     color = Color(0xFF94A3B8),
-                                    fontSize = 9.sp
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.SemiBold
                                 )
                                 OutlinedTextField(
                                     value = playerName,
@@ -288,30 +323,49 @@ fun MainMenuScreen(
                                     ),
                                     colors = OutlinedTextFieldDefaults.colors(
                                         focusedBorderColor = Color(0xFFF59E0B),
-                                        unfocusedBorderColor = Color(0xFF475569)
-                                    )
+                                        unfocusedBorderColor = Color(0xFF334155),
+                                        focusedContainerColor = Color(0xFF0B1120),
+                                        unfocusedContainerColor = Color(0xFF0B1120)
+                                    ),
+                                    shape = RoundedCornerShape(8.dp)
                                 )
                             }
 
-                            Button(
-                                onClick = onHeroClick,
-                                colors = ButtonDefaults.buttonColors(containerColor = selectedHero.primaryColor),
-                                shape = RoundedCornerShape(10.dp),
-                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
-                                modifier = Modifier.testTag("hero_barracks_button")
-                            ) {
-                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text(
-                                        text = selectedHero.amharicName,
-                                        color = Color.White,
-                                        fontSize = 11.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        text = "Change Hero",
-                                        color = Color(0xFFFDE68A),
-                                        fontSize = 9.sp
-                                    )
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                OutlinedButton(
+                                    onClick = onCustomizationClick,
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFFDE68A)),
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFF59E0B)),
+                                    shape = RoundedCornerShape(12.dp),
+                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                                    modifier = Modifier.testTag("landscape_customization_button")
+                                ) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(text = "አልባሳት", color = Color(0xFFF59E0B), fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                        Text(text = "Attire & Skins", color = Color.White, fontSize = 9.sp)
+                                    }
+                                }
+
+                                Button(
+                                    onClick = onHeroClick,
+                                    colors = ButtonDefaults.buttonColors(containerColor = selectedHero.primaryColor),
+                                    shape = RoundedCornerShape(12.dp),
+                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                                    modifier = Modifier.testTag("hero_barracks_button")
+                                ) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(
+                                            text = selectedHero.amharicName,
+                                            color = Color.White,
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(
+                                            text = "Change Hero",
+                                            color = Color(0xFFFDE68A),
+                                            fontSize = 9.sp
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -324,67 +378,108 @@ fun MainMenuScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onStartBotMatch(botCount) }
-                    .border(2.dp, Color(0xFFF59E0B), RoundedCornerShape(14.dp))
+                    .border(
+                        1.5.dp,
+                        Brush.horizontalGradient(
+                            listOf(Color(0xFFFDE68A), Color(0xFFF59E0B), Color(0xFFD97706))
+                        ),
+                        RoundedCornerShape(16.dp)
+                    )
                     .testTag("quick_play_hero_banner"),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFB45309)),
-                shape = RoundedCornerShape(14.dp)
+                colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+                shape = RoundedCornerShape(16.dp)
             ) {
-                Row(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(
+                                    Color(0xFFB45309),
+                                    Color(0xFF92400E),
+                                    Color(0xFF78350F)
+                                )
+                            )
+                        )
                 ) {
                     Row(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 18.dp, vertical = 14.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(46.dp)
-                                .clip(CircleShape)
-                                .background(Color(0xFFD97706))
-                                .border(1.5.dp, Color(0xFFFDE68A), CircleShape),
-                            contentAlignment = Alignment.Center
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.SportsEsports,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(28.dp)
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .clip(CircleShape)
+                                    .background(
+                                        Brush.radialGradient(
+                                            listOf(Color(0xFFFDE68A), Color(0xFFF59E0B), Color(0xFFD97706))
+                                        )
+                                    )
+                                    .border(2.dp, Color.White, CircleShape),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.SportsEsports,
+                                    contentDescription = null,
+                                    tint = Color(0xFF0F172A),
+                                    modifier = Modifier.size(28.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(14.dp))
+                            Column {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = "QUICK MATCH • ፈጣን ፍልሚያ ጀምር",
+                                        color = Color.White,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Black
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(4.dp))
+                                            .background(Color(0x4D000000))
+                                            .padding(horizontal = 5.dp, vertical = 2.dp)
+                                    ) {
+                                        Text(
+                                            text = "⚡ INSTANT",
+                                            color = Color(0xFFFDE68A),
+                                            fontSize = 9.sp,
+                                            fontWeight = FontWeight.Black
+                                        )
+                                    }
+                                }
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = "3-Bot Deathmatch • ${selectedHero.title} (${selectedHero.amharicName}) • Map: ${selectedArena.title}",
+                                    color = Color(0xFFFDE68A),
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Button(
+                            onClick = { onStartBotMatch(botCount) },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF59E0B)),
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp),
+                            modifier = Modifier.testTag("quick_play_button")
+                        ) {
+                            Text(
+                                text = "START NOW",
+                                color = Color(0xFF0F172A),
+                                fontWeight = FontWeight.Black,
+                                fontSize = 13.sp
                             )
                         }
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column {
-                            Text(
-                                text = "QUICK MATCH • ፈጣን ፍልሚያ ጀምር",
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Black
-                            )
-                            Text(
-                                text = "Instant 3-Bot Deathmatch • ${selectedHero.title} • Map: ${selectedArena.title}",
-                                color = Color(0xFFFDE68A),
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Button(
-                        onClick = { onStartBotMatch(botCount) },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF59E0B)),
-                        shape = RoundedCornerShape(10.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
-                        modifier = Modifier.testTag("quick_play_button")
-                    ) {
-                        Text(
-                            text = "START NOW",
-                            color = Color(0xFF0F172A),
-                            fontWeight = FontWeight.Black,
-                            fontSize = 13.sp
-                        )
                     }
                 }
             }
@@ -712,15 +807,15 @@ fun MainMenuScreen(
                 }
             }
 
-            // BOTTOM BAR: Arena Picker, Armory, Target Practice
+            // BOTTOM BAR: Arena Picker, Armory, Target Practice, Attire
             if (isCompactWidth) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(Color(0xFF111827))
-                        .border(1.dp, Color(0xFF1F2937), RoundedCornerShape(14.dp))
-                        .padding(12.dp),
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color(0xFF10192A))
+                        .border(1.dp, Color(0x33F59E0B), RoundedCornerShape(16.dp))
+                        .padding(14.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     // Arena Selector
@@ -731,11 +826,23 @@ fun MainMenuScreen(
                             .clickable { showArenaDialog = true }
                             .padding(vertical = 4.dp)
                     ) {
-                        Icon(Icons.Default.Landscape, contentDescription = "Arena", tint = Color(0xFFF59E0B), modifier = Modifier.size(24.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(Color(0x33F59E0B)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(Icons.Default.Landscape, contentDescription = "Arena", tint = Color(0xFFF59E0B), modifier = Modifier.size(20.dp))
+                        }
                         Spacer(modifier = Modifier.width(10.dp))
-                        Column {
-                            Text(text = "Arena Map: ${selectedArena.title}", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                            Text(text = "${selectedArena.amharicName} (Tap to change)", color = Color(0xFF94A3B8), fontSize = 11.sp)
+                        Column(modifier = Modifier.weight(1f)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(text = "Arena: ${selectedArena.title}", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(text = "CHANGE ▾", color = Color(0xFFF59E0B), fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            }
+                            Text(text = "${selectedArena.amharicName} • ${selectedArena.description}", color = Color(0xFF94A3B8), fontSize = 10.sp, maxLines = 1)
                         }
                     }
 
@@ -748,15 +855,31 @@ fun MainMenuScreen(
                             onClick = onArmoryClick,
                             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFFDE68A)),
                             border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFD97706)),
-                            shape = RoundedCornerShape(10.dp),
+                            shape = RoundedCornerShape(12.dp),
                             modifier = Modifier
                                 .weight(1f)
                                 .height(46.dp)
                                 .testTag("armory_screen_button")
                         ) {
                             Icon(Icons.Default.MilitaryTech, contentDescription = "Armory", modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(text = "Armory", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = "Armory", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        }
+
+                        // Attire Customization Button
+                        OutlinedButton(
+                            onClick = onCustomizationClick,
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFFDE68A)),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFF59E0B)),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier
+                                .weight(1.1f)
+                                .height(46.dp)
+                                .testTag("menu_attire_button")
+                        ) {
+                            Icon(Icons.Default.AutoAwesome, contentDescription = "Attire", tint = Color(0xFFF59E0B), modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = "Attire (አልባሳት)", fontSize = 11.sp, fontWeight = FontWeight.Bold)
                         }
 
                         // Target Range
@@ -764,15 +887,15 @@ fun MainMenuScreen(
                             onClick = onPracticeRangeClick,
                             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF38BDF8)),
                             border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF0284C7)),
-                            shape = RoundedCornerShape(10.dp),
+                            shape = RoundedCornerShape(12.dp),
                             modifier = Modifier
                                 .weight(1f)
                                 .height(46.dp)
                                 .testTag("practice_range_button")
                         ) {
                             Icon(Icons.Default.TrackChanges, contentDescription = "Target", modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(text = "Range", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = "Range", fontSize = 11.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -780,10 +903,10 @@ fun MainMenuScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(Color(0xFF111827))
-                        .border(1.dp, Color(0xFF1F2937), RoundedCornerShape(14.dp))
-                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color(0xFF10192A))
+                        .border(1.dp, Color(0x33F59E0B), RoundedCornerShape(16.dp))
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -792,26 +915,51 @@ fun MainMenuScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.clickable { showArenaDialog = true }
                     ) {
-                        Icon(Icons.Default.Landscape, contentDescription = "Arena", tint = Color(0xFFF59E0B), modifier = Modifier.size(20.dp))
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(Color(0x33F59E0B)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(Icons.Default.Landscape, contentDescription = "Arena", tint = Color(0xFFF59E0B), modifier = Modifier.size(20.dp))
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
                         Column {
-                            Text(text = "Arena Map: ${selectedArena.title}", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(text = "Arena Map: ${selectedArena.title}", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(text = "CHANGE ▾", color = Color(0xFFF59E0B), fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            }
                             Text(text = selectedArena.amharicName, color = Color(0xFF94A3B8), fontSize = 10.sp)
                         }
                     }
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        // Attire & Skins Button
+                        OutlinedButton(
+                            onClick = onCustomizationClick,
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFFDE68A)),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFF59E0B)),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.testTag("menu_attire_button_landscape")
+                        ) {
+                            Icon(Icons.Default.AutoAwesome, contentDescription = "Attire", tint = Color(0xFFF59E0B), modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(text = "Attire & Skins (አልባሳት)", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        }
+
                         // Armory Button
                         OutlinedButton(
                             onClick = onArmoryClick,
                             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFFDE68A)),
                             border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFD97706)),
-                            shape = RoundedCornerShape(10.dp),
+                            shape = RoundedCornerShape(12.dp),
                             modifier = Modifier.testTag("armory_screen_button")
                         ) {
                             Icon(Icons.Default.MilitaryTech, contentDescription = "Armory", modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text(text = "Armory (10 Weapons)", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            Text(text = "Armory", fontSize = 11.sp, fontWeight = FontWeight.Bold)
                         }
 
                         // Target Range
@@ -819,12 +967,12 @@ fun MainMenuScreen(
                             onClick = onPracticeRangeClick,
                             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF38BDF8)),
                             border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF0284C7)),
-                            shape = RoundedCornerShape(10.dp),
+                            shape = RoundedCornerShape(12.dp),
                             modifier = Modifier.testTag("practice_range_button")
                         ) {
                             Icon(Icons.Default.TrackChanges, contentDescription = "Target", modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text(text = "Shooting Range", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            Text(text = "Range", fontSize = 11.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -847,17 +995,28 @@ fun MainMenuScreen(
                                         showArenaDialog = false
                                     },
                                 colors = CardDefaults.cardColors(
-                                    containerColor = if (selectedArena == arena) Color(0xFF374151) else Color(0xFF1E293B)
+                                    containerColor = if (selectedArena == arena) Color(0xFF243247) else Color(0xFF131D2E)
                                 ),
                                 border = androidx.compose.foundation.BorderStroke(
-                                    1.dp,
-                                    if (selectedArena == arena) Color(0xFFF59E0B) else Color.Transparent
-                                )
+                                    1.5.dp,
+                                    if (selectedArena == arena) Color(0xFFF59E0B) else Color(0x26475569)
+                                ),
+                                shape = RoundedCornerShape(12.dp)
                             ) {
-                                Column(modifier = Modifier.padding(12.dp)) {
-                                    Text(text = arena.title, color = Color.White, fontWeight = FontWeight.Bold)
-                                    Text(text = arena.amharicName, color = Color(0xFFFDE68A), fontSize = 11.sp)
-                                    Text(text = arena.description, color = Color(0xFF94A3B8), fontSize = 10.sp)
+                                Column(modifier = Modifier.padding(14.dp)) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(text = arena.title, color = Color.White, fontWeight = FontWeight.Bold)
+                                        if (selectedArena == arena) {
+                                            Text(text = "SELECTED", color = Color(0xFFF59E0B), fontSize = 10.sp, fontWeight = FontWeight.Black)
+                                        }
+                                    }
+                                    Text(text = arena.amharicName, color = Color(0xFFFDE68A), fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                                    Spacer(modifier = Modifier.height(2.dp))
+                                    Text(text = arena.description, color = Color(0xFF94A3B8), fontSize = 11.sp)
                                 }
                             }
                         }
@@ -865,10 +1024,11 @@ fun MainMenuScreen(
                 },
                 confirmButton = {
                     TextButton(onClick = { showArenaDialog = false }) {
-                        Text("Close", color = Color.White)
+                        Text("Close", color = Color.White, fontWeight = FontWeight.Bold)
                     }
                 },
-                containerColor = Color(0xFF111827)
+                containerColor = Color(0xFF0C1322),
+                shape = RoundedCornerShape(18.dp)
             )
         }
     }
@@ -889,49 +1049,73 @@ fun ModeCard(
 ) {
     Card(
         modifier = modifier
-            .border(1.5.dp, color.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+            .border(
+                1.5.dp,
+                Brush.verticalGradient(
+                    listOf(color.copy(alpha = 0.65f), color.copy(alpha = 0.25f))
+                ),
+                RoundedCornerShape(18.dp)
+            )
             .testTag(testTag)
             .then(
                 if (onClick != null) {
                     Modifier.clickable(onClick = onClick)
                 } else Modifier
             ),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF131C2E)),
-        shape = RoundedCornerShape(16.dp)
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        shape = RoundedCornerShape(18.dp)
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            color.copy(alpha = 0.15f),
+                            Color(0xFF10192A),
+                            Color(0xFF0A0F1B)
+                        )
+                    )
+                )
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(38.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(color.copy(alpha = 0.2f)),
-                    contentAlignment = Alignment.Center
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = icon, contentDescription = null, tint = color, modifier = Modifier.size(22.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(42.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(color.copy(alpha = 0.2f))
+                            .border(1.dp, color.copy(alpha = 0.5f), RoundedCornerShape(12.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(imageVector = icon, contentDescription = null, tint = color, modifier = Modifier.size(24.dp))
+                    }
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(color.copy(alpha = 0.18f))
+                            .border(1.dp, color.copy(alpha = 0.45f), RoundedCornerShape(8.dp))
+                            .padding(horizontal = 8.dp, vertical = 3.dp)
+                    ) {
+                        Text(text = badge, color = color, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                    }
                 }
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(color.copy(alpha = 0.2f))
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
-                ) {
-                    Text(text = badge, color = color, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text(text = title, color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Black)
+                    Text(text = amharicTitle, color = Color(0xFFFDE68A), fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                 }
+                Text(text = description, color = Color(0xFF94A3B8), fontSize = 11.sp, lineHeight = 16.sp)
+                content()
             }
-            Text(text = title, color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Black)
-            Text(text = amharicTitle, color = Color(0xFFFDE68A), fontSize = 12.sp, fontWeight = FontWeight.Bold)
-            Text(text = description, color = Color(0xFF94A3B8), fontSize = 11.sp, lineHeight = 15.sp)
-            content()
         }
     }
 }
@@ -1630,6 +1814,7 @@ fun HeroBarracksScreen(
     currentHero: WarriorHero,
     onSelectHero: (WarriorHero) -> Unit,
     onBackClick: () -> Unit,
+    onCustomizationClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val heroes = WarriorHero.values()
@@ -1749,16 +1934,33 @@ fun HeroBarracksScreen(
                             }
                         }
 
-                        Button(
-                            onClick = {
-                                onSelectHero(selected)
-                                onBackClick()
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = selected.primaryColor),
-                            shape = RoundedCornerShape(10.dp),
-                            modifier = Modifier.fillMaxWidth().height(46.dp)
-                        ) {
-                            Text(text = "SELECT WARRIOR", fontWeight = FontWeight.Black)
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            OutlinedButton(
+                                onClick = onCustomizationClick,
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFFDE68A)),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFF59E0B)),
+                                shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(42.dp)
+                                    .testTag("barracks_customization_button")
+                            ) {
+                                Icon(Icons.Default.AutoAwesome, contentDescription = null, tint = Color(0xFFF59E0B), modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(text = "CUSTOMIZE ATTIRE (የባህል አልባሳት)", fontWeight = FontWeight.Bold, fontSize = 11.sp)
+                            }
+
+                            Button(
+                                onClick = {
+                                    onSelectHero(selected)
+                                    onBackClick()
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = selected.primaryColor),
+                                shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier.fillMaxWidth().height(46.dp)
+                            ) {
+                                Text(text = "SELECT WARRIOR", fontWeight = FontWeight.Black)
+                            }
                         }
                     }
                 }

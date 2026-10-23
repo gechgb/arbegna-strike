@@ -468,16 +468,18 @@ private fun drawWarriorCharacter(
 
     // 2. Jetpack Thruster Boots on Feet (Kumeta Riding Cuffs & Thrusters)
     val footY = y + 26f
+    val attire = player.customization
+
     // Kumeta knee-length riding trousers cuffs
     scope.drawRoundRect(
-        color = Color(0xFF1E293B),
+        color = attire.kumeta.trouserColor,
         topLeft = Offset(x - 16f, footY - 10f),
         size = Size(32f, 10f),
         cornerRadius = CornerRadius(3f, 3f)
     )
     // Kumeta golden embroidered cuff fringe
     scope.drawLine(
-        color = Color(0xFFF59E0B),
+        color = attire.kumeta.fringeColor,
         start = Offset(x - 16f, footY - 1f),
         end = Offset(x + 16f, footY - 1f),
         strokeWidth = 2.5f
@@ -485,20 +487,20 @@ private fun drawWarriorCharacter(
 
     // Thruster Boots
     scope.drawRoundRect(
-        color = Color(0xFF334155),
+        color = attire.kumeta.bootColor,
         topLeft = Offset(x - 15f, footY),
         size = Size(11f, 12f),
         cornerRadius = CornerRadius(3f, 3f)
     )
     scope.drawRoundRect(
-        color = Color(0xFF334155),
+        color = attire.kumeta.bootColor,
         topLeft = Offset(x + 4f, footY),
         size = Size(11f, 12f),
         cornerRadius = CornerRadius(3f, 3f)
     )
     // Brass boot buckles
-    scope.drawRect(Color(0xFFFDE68A), Offset(x - 13f, footY + 4f), Size(7f, 3f))
-    scope.drawRect(Color(0xFFFDE68A), Offset(x + 6f, footY + 4f), Size(7f, 3f))
+    scope.drawRect(attire.kumeta.buckleColor, Offset(x - 13f, footY + 4f), Size(7f, 3f))
+    scope.drawRect(attire.kumeta.buckleColor, Offset(x + 6f, footY + 4f), Size(7f, 3f))
 
     if (player.isJetpacking) {
         val hasTurbo = player.superJetpackTimerMs > 0L
@@ -525,7 +527,7 @@ private fun drawWarriorCharacter(
         )
     }
 
-    // 3. Dynamic Flowing Jano & Kuta Cape (ኩታና ጃኖ ካባ) with Royal Red & Gold Tibeb Border
+    // 3. Dynamic Flowing Jano & Kuta Cape (ኩታና ጃኖ ካባ)
     val cloakEndX = x - facingSign * 28f
     val cloakPath = Path().apply {
         moveTo(x, y - 8f)
@@ -536,8 +538,8 @@ private fun drawWarriorCharacter(
     }
     // High-contrast dark outline behind cape
     scope.drawPath(cloakPath, color = Color(0x99000000), style = Stroke(width = 3.5f))
-    // Cape Body (Authentic handspun natural white cotton Kuta fabric)
-    scope.drawPath(cloakPath, color = Color(0xFFF8FAFC))
+    // Cape Body (Authentic Kuta fabric: White, Midnight Velvet, Gabi, etc.)
+    scope.drawPath(cloakPath, color = attire.cape.capeColor)
 
     // Iconic Jano Royal Border (ጃኖ ጥበብ): Red banner & Gold trim at cape hem
     val janoBorderPath = Path().apply {
@@ -547,9 +549,9 @@ private fun drawWarriorCharacter(
         lineTo(cloakEndX + 6f, y + 14f)
         close()
     }
-    scope.drawPath(janoBorderPath, color = Color(0xFFDC2626)) // Imperial Crimson Red
+    scope.drawPath(janoBorderPath, color = attire.cape.tibebColor)
     scope.drawLine(
-        color = Color(0xFFF59E0B), // Ethiopian Gold
+        color = attire.cape.trimColor,
         start = Offset(cloakEndX + 2f, y + 22f),
         end = Offset(cloakEndX + 8f, y + 26f),
         strokeWidth = 2.5f
@@ -571,30 +573,30 @@ private fun drawWarriorCharacter(
         cornerRadius = CornerRadius(6f, 6f)
     )
 
-    // Kuta Shoulder Wrap (የተደረበ ነጭ ኩታ)
+    // Kuta Shoulder Wrap (የተደረበ ኩታ)
     scope.drawRoundRect(
-        color = Color(0xFFF1F5F9),
+        color = attire.cape.capeColor,
         topLeft = Offset(x - 15f, y - 10f),
         size = Size(30f, 13f),
         cornerRadius = CornerRadius(6f, 6f)
     )
     // Kuta golden neckband embroidery
     scope.drawLine(
-        color = Color(0xFFF59E0B),
+        color = attire.cape.trimColor,
         start = Offset(x - 8f, y - 5f),
         end = Offset(x + 8f, y - 5f),
         strokeWidth = 2f
     )
 
-    // Jano Red-and-Gold Bandolier across chest (የጃኖ ድግ)
+    // Chest Sash / Bandolier (የደረት ድግና ባንዶሌር)
     scope.drawLine(
-        color = Color(0xFFDC2626),
+        color = attire.sash.bandColor,
         start = Offset(x - 12f, y - 7f),
         end = Offset(x + 12f, y + 15f),
-        strokeWidth = 5f
+        strokeWidth = attire.sash.width
     )
     scope.drawLine(
-        color = Color(0xFFFDE68A),
+        color = attire.sash.stripeColor,
         start = Offset(x - 12f, y - 7f),
         end = Offset(x + 12f, y + 15f),
         strokeWidth = 1.5f
@@ -621,17 +623,21 @@ private fun drawWarriorCharacter(
     scope.drawCircle(Color(0xFF0F172A), radius = 1.2f, center = Offset(eyeX + facingSign * 0.8f, eyeY))
 
     // 6. Cultural Headgear (የራስ ቁርና ጎፈሬ)
-    when (hero.headgearType) {
+    val headgearType = if (attire.headgear == HeadgearSkin.HERO_DEFAULT) hero.headgearType else attire.headgear.headgearType
+    val hPrimary = if (attire.headgear == HeadgearSkin.HERO_DEFAULT) Color(0xFFB45309) else attire.headgear.primaryColor
+    val hAccent = if (attire.headgear == HeadgearSkin.HERO_DEFAULT) Color(0xFFF59E0B) else attire.headgear.accentColor
+
+    when (headgearType) {
         "LION_MANE" -> {
             // Arbegna Lion Mane Headdress (ጎፈሬ) with golden mane ring
             scope.drawCircle(
-                color = Color(0xFFB45309),
+                color = hPrimary,
                 radius = 18f,
                 center = Offset(x, y - 24f),
                 style = Stroke(width = 6f)
             )
             scope.drawCircle(
-                color = Color(0xFFF59E0B),
+                color = hAccent,
                 radius = 17f,
                 center = Offset(x, y - 24f),
                 style = Stroke(width = 2.5f)
@@ -645,32 +651,39 @@ private fun drawWarriorCharacter(
                 lineTo(x - 8f, y - 30f)
                 close()
             }
-            scope.drawPath(crest, color = Color(0xFFF59E0B))
-            scope.drawCircle(Color(0xFFDC2626), radius = 4f, center = Offset(x, y - 40f))
+            scope.drawPath(crest, color = hPrimary)
+            scope.drawCircle(hAccent, radius = 4f, center = Offset(x, y - 40f))
         }
         "KALLACHA" -> {
             // Oromo Gadaa Kallacha Forehead Crown
             scope.drawLine(
-                color = Color(0xFFFDE68A),
+                color = hPrimary,
                 start = Offset(x, y - 28f),
                 end = Offset(x + facingSign * 14f, y - 30f),
                 strokeWidth = 4f
             )
-            scope.drawCircle(Color(0xFFD97706), radius = 3.5f, center = Offset(x + facingSign * 14f, y - 30f))
+            scope.drawCircle(hAccent, radius = 3.5f, center = Offset(x + facingSign * 14f, y - 30f))
         }
         "DESERT_TURBAN" -> {
             // Layered Afar Desert Turban Wrap
             scope.drawRoundRect(
-                color = Color(0xFFFEF08A),
+                color = hAccent,
                 topLeft = Offset(x - 15f, y - 34f),
                 size = Size(30f, 13f),
                 cornerRadius = CornerRadius(5f, 5f)
             )
-            scope.drawLine(Color(0xFFD97706), Offset(x - 14f, y - 28f), Offset(x + 14f, y - 28f), strokeWidth = 2f)
+            scope.drawLine(hPrimary, Offset(x - 14f, y - 28f), Offset(x + 14f, y - 28f), strokeWidth = 2f)
+        }
+        "TRI_HEADBAND" -> {
+            // Ethiopian Green-Yellow-Red Patriotic Ribbon Headband
+            scope.drawLine(Color(0xFF10B981), Offset(x - 14f, y - 30f), Offset(x + 14f, y - 30f), strokeWidth = 3f)
+            scope.drawLine(Color(0xFFF59E0B), Offset(x - 14f, y - 27f), Offset(x + 14f, y - 27f), strokeWidth = 2.5f)
+            scope.drawLine(Color(0xFFDC2626), Offset(x - 14f, y - 24f), Offset(x + 14f, y - 24f), strokeWidth = 2.5f)
+            scope.drawCircle(Color(0xFFFDE68A), radius = 3.5f, center = Offset(x + facingSign * 4f, y - 27f))
         }
         "EAGLE_HOOD" -> {
             scope.drawCircle(
-                color = Color(0xFF047857),
+                color = hPrimary,
                 radius = 16f,
                 center = Offset(x, y - 24f),
                 style = Stroke(width = 4.5f)
@@ -795,3 +808,67 @@ private fun drawEquippedWeapon(
         }
     }
 }
+
+/**
+ * High-definition live canvas preview for the Character Customization screen.
+ * Displays the selected hero adorned with equipped Kuta, Kumeta, Headgear, and Jano sash.
+ */
+@Composable
+fun WarriorAttireCanvasPreview(
+    hero: WarriorHero,
+    customization: WarriorCustomization,
+    weapon: WeaponType = WeaponType.SHOTEL_BLADE,
+    isJetpacking: Boolean = false,
+    modifier: Modifier = Modifier
+) {
+    val textMeasurer = rememberTextMeasurer()
+
+    Canvas(modifier = modifier) {
+        if (size.width <= 1f || size.height <= 1f) return@Canvas
+
+        val centerX = size.width / 2f
+        val centerY = size.height / 2f + 10f
+
+        // Background decorative aura
+        drawCircle(
+            color = hero.primaryColor.copy(alpha = 0.15f),
+            radius = size.width.coerceAtMost(size.height) * 0.42f,
+            center = Offset(centerX, centerY - 10f)
+        )
+        drawCircle(
+            color = customization.cape.tibebColor.copy(alpha = 0.12f),
+            radius = size.width.coerceAtMost(size.height) * 0.35f,
+            center = Offset(centerX, centerY - 10f)
+        )
+
+        // Ground shadow
+        drawOval(
+            color = Color(0x66000000),
+            topLeft = Offset(centerX - 42f, centerY + 30f),
+            size = Size(84f, 16f)
+        )
+
+        // Mock player state for preview
+        val previewPlayer = PlayerState(
+            id = "preview",
+            name = hero.title,
+            hero = hero,
+            x = centerX,
+            y = centerY,
+            isFacingRight = true,
+            isJetpacking = isJetpacking,
+            aimAngleDeg = -10f,
+            currentWeapon = weapon,
+            customization = customization
+        )
+
+        drawWarriorCharacter(
+            scope = this,
+            player = previewPlayer,
+            x = centerX,
+            y = centerY,
+            measurer = textMeasurer
+        )
+    }
+}
+

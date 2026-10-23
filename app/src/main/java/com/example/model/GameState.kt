@@ -99,7 +99,8 @@ data class PlayerState(
     var isInvulnerableMs: Long = 0L,
     var isGrounded: Boolean = false,
     var superJetpackTimerMs: Long = 0L,
-    var jetpackRechargeDelayMs: Long = 0L
+    var jetpackRechargeDelayMs: Long = 0L,
+    var customization: WarriorCustomization = WarriorCustomization()
 )
 
 enum class GameMode(val title: String, val amharicName: String, val description: String) {
